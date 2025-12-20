@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>松商の鏡</title>
+    <style>
+        /* --- ここからデザイン（CSS） --- */
+        body {
+            background-color: #1a1a1a; /* 背景はダークグレー */
+            color: white;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #00d2ff; /* タイトルの色 */
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+        }
+
+        p.subtitle {
+            color: #888;
+            margin-bottom: 40px;
+        }
+
+        /* ゲームを並べるエリア */
+        .game-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* 画面幅に合わせて折り返す */
+            gap: 30px; /* カード同士の間隔 */
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 個別のゲームカード */
+        .game-card {
+            background-color: #2d2d2d;
+            border-radius: 16px;
+            width: 280px;
+            text-decoration: none; /* リンクの下線を消す */
+            color: white;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 2px solid #333;
+        }
+
+        /* マウスが乗った時の動き */
+        .game-card:hover {
+            transform: translateY(-5px); /* 少し上に浮く */
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.2); /* 光る影 */
+            border-color: #00d2ff;
+        }
+
+        /* サムネイル画像エリア（仮の色ブロック） */
+        .thumbnail {
+            width: 100%;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* カードの下側のテキストエリア */
+        .card-info {
+            padding: 15px;
+        }
+
+        .card-info h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .card-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🙉松商の鏡🙉</h1>
+    <p class="subtitle">自作ゲームコレクションへようこそ！</p>
+
+    <div class="game-container">
+
+        <a href="./game1/index.html" class="game-card">
+            <div class="thumbnail" style="background: linear-gradient(45deg, #ff6b6b, #ee5253);">⚔️</div>
+            <div class="card-info">
+                <h2>避けゲー</h2>
+                <p>制作：ひゅーが</p>
+            </div>
+        </a>
+
+        <a href="./game2/index.html" class="game-card">
+            <div class="thumbnail" style="background: linear-gradient(45deg, #48dbfb, #0abde3);">🧩</div>
+            <div class="card-info">
+                <h2>筋肉育成</h2>
+                <p>制作：おれ</p>
+            </div>
+        </a>
+
+        <a href="./game3/index.html" class="game-card">
+            <div class="thumbnail" style="background: linear-gradient(45deg, #feca57, #ff9f43);">🚀</div>
+            <div class="card-info">
+                <h2>カッティングファイティング</h2>
+                <p>制作：おれ</p>
+            </div>
+        </a>
+
+    </div>
+
+</body>
+</html>
