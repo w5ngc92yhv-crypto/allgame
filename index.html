@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>処理科の鏡</title>
     <style>
-        /* --- ここからデザイン（CSS） --- */
+        /* --- デザイン（CSS） --- */
         body {
-            background-color: #1a1a1a; /* 背景はダークグレー */
+            background-color: #1a1a1a;
             color: white;
             font-family: 'Helvetica Neue', Arial, sans-serif;
             text-align: center;
@@ -18,7 +18,7 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            color: #00d2ff; /* タイトルの色 */
+            color: #00d2ff;
             text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
         }
 
@@ -27,22 +27,22 @@
             margin-bottom: 40px;
         }
 
-        /* ゲームを並べるエリア */
+        /* ゲームコンテナ */
         .game-container {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap; /* 画面幅に合わせて折り返す */
-            gap: 30px; /* カード同士の間隔 */
+            flex-wrap: wrap;
+            gap: 30px;
             max-width: 1200px;
             margin: 0 auto;
+            padding-bottom: 80px;
         }
 
-        /* 個別のゲームカード */
         .game-card {
             background-color: #2d2d2d;
             border-radius: 16px;
             width: 280px;
-            text-decoration: none; /* リンクの下線を消す */
+            text-decoration: none;
             color: white;
             overflow: hidden;
             transition: transform 0.2s, box-shadow 0.2s;
@@ -50,14 +50,12 @@
             border: 2px solid #333;
         }
 
-        /* マウスが乗った時の動き */
         .game-card:hover {
-            transform: translateY(-5px); /* 少し上に浮く */
-            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.2); /* 光る影 */
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.2);
             border-color: #00d2ff;
         }
 
-        /* サムネイル画像エリア（仮の色ブロック） */
         .thumbnail {
             width: 100%;
             height: 160px;
@@ -69,7 +67,6 @@
             color: rgba(255,255,255,0.8);
         }
 
-        /* カードの下側のテキストエリア */
         .card-info {
             padding: 15px;
         }
@@ -84,6 +81,265 @@
             margin: 0;
             font-size: 0.9rem;
             color: #aaa;
+        }
+
+        /* --- チャットボタン --- */
+        #chat-toggle-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00d2ff, #007aff);
+            box-shadow: 0 4px 10px rgba(0, 210, 255, 0.4);
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #chat-toggle-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* --- チャットウィンドウ --- */
+        #chat-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background-color: #2d2d2d;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none;
+            flex-direction: column;
+            border: 1px solid #444;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        #chat-header {
+            background: #333;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #444;
+        }
+        #chat-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #00d2ff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+        
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #chat-private-btn, #chat-close-btn {
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: color 0.2s, background 0.2s;
+        }
+        #chat-private-btn:hover, #chat-close-btn:hover { 
+            color: white; 
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* プライベートモード時のスタイル */
+        .private-mode #chat-header {
+            background: #2c003e;
+        }
+        .private-mode #chat-header h3 {
+            color: #d633ff;
+        }
+
+        #chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            text-align: left;
+        }
+
+        .message {
+            background: #3d3d3d;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            word-wrap: break-word;
+        }
+        .message .meta {
+            font-size: 0.75rem;
+            color: #aaa;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .message .text {
+            color: white;
+        }
+
+        #chat-input-area {
+            padding: 10px;
+            background: #333;
+            border-top: 1px solid #444;
+            display: flex;
+            gap: 5px;
+            flex-direction: column;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 5px;
+        }
+
+        #chat-username {
+            background: #222;
+            border: 1px solid #555;
+            color: white;
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            width: 80px;
+        }
+
+        #chat-input {
+            flex: 1;
+            background: #222;
+            border: 1px solid #555;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        #chat-send-btn {
+            background: #00d2ff;
+            border: none;
+            color: #000;
+            font-weight: bold;
+            padding: 0 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #chat-send-btn:hover { background: #00a0cc; }
+        .private-mode #chat-send-btn {
+            background: #d633ff;
+        }
+
+        /* --- モーダル共通スタイル --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .modal-box {
+            background: #2d2d2d;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #444;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            max-width: 300px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .modal-box h3 {
+            margin-top: 0;
+            color: #00d2ff;
+            margin-bottom: 10px;
+        }
+        
+        .modal-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #444;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s, transform 0.1s;
+        }
+        
+        .modal-btn:hover {
+            background: #555;
+            transform: translateY(-2px);
+        }
+        
+        .modal-btn.primary {
+            background: linear-gradient(45deg, #00d2ff, #007aff);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .modal-btn.secondary {
+            background: linear-gradient(45deg, #d633ff, #9b00e6);
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* 入力フォーム付きモーダル用 */
+        .modal-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #555;
+            background: #222;
+            color: white;
+            box-sizing: border-box; /* パディングを含める */
+        }
+        
+        .secret-code-display {
+            background: #000;
+            color: #00ff00;
+            font-family: monospace;
+            font-size: 1.5rem;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border: 1px solid #333;
+            cursor: pointer;
+        }
+
+        #chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        #chat-messages::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -126,10 +382,385 @@
             </div>
         </a>
 
-
     </div>
 
+    <button id="chat-toggle-btn">💬</button>
+
+    <div id="private-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>プライベートチャット</h3>
+            <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px;">友達と秘密の会話をしよう</p>
+            <button id="modal-create-btn" class="modal-btn primary">部屋を作る</button>
+            <button id="modal-join-btn" class="modal-btn secondary">部屋に参加する</button>
+            <button id="modal-cancel-btn" class="modal-btn">キャンセル</button>
+        </div>
+    </div>
+
+    <div id="create-room-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>部屋を作成</h3>
+            <p style="color: #aaa; font-size: 0.9rem;">合言葉を決めてください<br>(日本語もOK)</p>
+            <input type="text" id="create-code-input" class="modal-input" placeholder="例: ひみつ123" maxlength="20">
+            <button id="create-submit-btn" class="modal-btn primary">この合言葉で作る</button>
+            <button id="create-cancel-btn" class="modal-btn">戻る</button>
+        </div>
+    </div>
+
+    <div id="join-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>部屋に参加する</h3>
+            <p style="color: #aaa; font-size: 0.9rem;">合言葉を入力してください</p>
+            <input type="text" id="join-code-input" class="modal-input" placeholder="例: ひみつ123" maxlength="20">
+            <button id="join-submit-btn" class="modal-btn secondary">参加する</button>
+            <button id="join-cancel-btn" class="modal-btn">戻る</button>
+        </div>
+    </div>
+    
+    <div id="alert-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 id="alert-title">お知らせ</h3>
+            <p id="alert-message" style="color: white; margin-bottom: 20px;"></p>
+            <div id="alert-buttons">
+                <button id="alert-ok-btn" class="modal-btn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-window">
+        <div id="chat-header">
+            <h3 id="chat-title">みんなのチャット</h3>
+            <div class="header-buttons">
+                <button id="chat-private-btn" title="プライベートチャット">🔒</button>
+                <button id="chat-close-btn" title="閉じる">×</button>
+            </div>
+        </div>
+        <div id="chat-messages">
+            <div class="message" style="text-align: center; color: #888; background: transparent;">
+                読み込み中...
+            </div>
+        </div>
+        <div id="chat-input-area">
+            <div class="input-row">
+                <input type="text" id="chat-username" placeholder="名前" value="名無し">
+            </div>
+            <div class="input-row">
+                <input type="text" id="chat-input" placeholder="メッセージを入力...">
+                <button id="chat-send-btn">送信</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // ===============================================
+        // 【重要】ここの中身を自分のFirebase設定に書き換えてください
+        // ===============================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyAi9MOKj61AsCwhqCutDDSbHUbA41eODh4",
+            authDomain: "game-chat-21c6e.firebaseapp.com",
+            projectId: "game-chat-21c6e",
+            storageBucket: "game-chat-21c6e.firebasestorage.app",
+            messagingSenderId: "1000149824470",
+            appId: "1:1000149824470:web:3922bc2025fd5218626a77"
+        };
+        // ===============================================
+
+        const app = initializeApp(firebaseConfig);
+        // const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let unsubscribeChat = null; 
+        let currentCollection = "public_chat"; 
+
+        // 匿名認証処理
+        signInAnonymously(auth).catch((error) => {
+            console.error("Authentication Error:", error);
+            showAlert("認証エラーが発生しました。");
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                console.log("Logged in with UID:", user.uid);
+                startChatListener("public_chat");
+            }
+        });
+
+        // UI要素
+        const chatWindow = document.getElementById('chat-window');
+        const chatTitle = document.getElementById('chat-title');
+        const toggleBtn = document.getElementById('chat-toggle-btn');
+        const closeBtn = document.getElementById('chat-close-btn');
+        const privateBtn = document.getElementById('chat-private-btn');
+        const messagesDiv = document.getElementById('chat-messages');
+        const msgInput = document.getElementById('chat-input');
+        const nameInput = document.getElementById('chat-username');
+        const sendBtn = document.getElementById('chat-send-btn');
+        
+        // モーダル要素
+        const privateModal = document.getElementById('private-modal');
+        const createModal = document.getElementById('create-room-modal');
+        const joinModal = document.getElementById('join-modal');
+        const alertModal = document.getElementById('alert-modal');
+
+        // カスタムアラート関数
+        function showAlert(msg, title="お知らせ", callback=null) {
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-message').innerText = msg;
+            alertModal.style.display = 'flex';
+            
+            const okBtn = document.getElementById('alert-ok-btn');
+            const newOkBtn = okBtn.cloneNode(true);
+            okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+            
+            newOkBtn.addEventListener('click', () => {
+                alertModal.style.display = 'none';
+                if(callback) callback();
+            });
+        }
+        
+        // カスタム確認関数（Yes/No）
+        function showConfirm(msg, yesCallback) {
+            document.getElementById('alert-title').innerText = "確認";
+            document.getElementById('alert-message').innerText = msg;
+            alertModal.style.display = 'flex';
+            
+            const btnContainer = document.getElementById('alert-buttons');
+            const originalContent = btnContainer.innerHTML; // バックアップ
+            
+            btnContainer.innerHTML = ''; // クリア
+            
+            const yesBtn = document.createElement('button');
+            yesBtn.className = 'modal-btn primary';
+            yesBtn.innerText = 'はい';
+            yesBtn.style.marginBottom = '5px';
+            
+            const noBtn = document.createElement('button');
+            noBtn.className = 'modal-btn';
+            noBtn.innerText = 'いいえ';
+            
+            btnContainer.appendChild(yesBtn);
+            btnContainer.appendChild(noBtn);
+            
+            yesBtn.onclick = () => {
+                alertModal.style.display = 'none';
+                btnContainer.innerHTML = originalContent; // 復元
+                yesCallback();
+            };
+            
+            noBtn.onclick = () => {
+                alertModal.style.display = 'none';
+                btnContainer.innerHTML = originalContent; // 復元
+            };
+        }
+
+
+        // チャット開閉
+        toggleBtn.addEventListener('click', () => {
+            chatWindow.style.display = 'flex';
+            toggleBtn.style.display = 'none';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+
+        closeBtn.addEventListener('click', () => {
+            chatWindow.style.display = 'none';
+            toggleBtn.style.display = 'flex';
+        });
+
+        // プライベートモード切替
+        privateBtn.addEventListener('click', () => {
+            if (currentCollection !== "public_chat") {
+                showConfirm("公開チャットに戻りますか？", () => {
+                    startChatListener("public_chat");
+                });
+            } else {
+                privateModal.style.display = 'flex';
+            }
+        });
+
+        // --- モーダル制御 ---
+        
+        // メインメニューキャンセル
+        document.getElementById('modal-cancel-btn').addEventListener('click', () => {
+            privateModal.style.display = 'none';
+        });
+
+        // 部屋作成へ（ボタンクリック時）
+        document.getElementById('modal-create-btn').addEventListener('click', () => {
+            privateModal.style.display = 'none';
+            const randomCode = Math.random().toString(36).substring(2, 8); 
+            document.getElementById('create-code-input').value = randomCode;
+            createModal.style.display = 'flex';
+        });
+
+        // 作成モーダル内の戻るボタン
+        document.getElementById('create-cancel-btn').addEventListener('click', () => {
+            createModal.style.display = 'none';
+            privateModal.style.display = 'flex';
+        });
+
+        // 作成実行ボタン
+        document.getElementById('create-submit-btn').addEventListener('click', () => {
+            const secret = document.getElementById('create-code-input').value.trim();
+            const sanitizedSecret = secret.replace(/[.\/#\[\]]/g, "").trim(); 
+            
+            if (sanitizedSecret.length > 0) {
+                createModal.style.display = 'none';
+                startChatListener("room_" + sanitizedSecret, sanitizedSecret);
+                showAlert(`部屋「${sanitizedSecret}」を作成しました！\nこの合言葉を友達に教えてね。`, "作成完了");
+            } else {
+                showAlert("合言葉が無効です（空欄は不可）。");
+            }
+        });
+
+        // 部屋参加へ
+        document.getElementById('modal-join-btn').addEventListener('click', () => {
+            privateModal.style.display = 'none';
+            document.getElementById('join-code-input').value = ""; 
+            joinModal.style.display = 'flex';
+        });
+
+        document.getElementById('join-cancel-btn').addEventListener('click', () => {
+            joinModal.style.display = 'none';
+            privateModal.style.display = 'flex'; 
+        });
+
+        document.getElementById('join-submit-btn').addEventListener('click', () => {
+            const secret = document.getElementById('join-code-input').value.trim();
+            const sanitizedSecret = secret.replace(/[.\/#\[\]]/g, "").trim();
+            
+            if (sanitizedSecret.length > 0) {
+                joinModal.style.display = 'none';
+                startChatListener("room_" + sanitizedSecret, sanitizedSecret);
+            } else {
+                showAlert("合言葉が正しくありません。");
+            }
+        });
+
+
+        // チャットリスナー
+        function startChatListener(collectionName, roomLabel = null) {
+            if (unsubscribeChat) {
+                unsubscribeChat();
+                unsubscribeChat = null;
+            }
+
+            currentCollection = collectionName;
+            messagesDiv.innerHTML = '<div class="message" style="background: transparent; text-align: center; color: #888;">読み込み中...</div>';
+
+            if (collectionName === "public_chat") {
+                chatTitle.innerText = "みんなのチャット";
+                chatWindow.classList.remove("private-mode");
+                privateBtn.innerText = "🔒";
+                privateBtn.title = "プライベートチャットへ";
+            } else {
+                chatTitle.innerText = `秘密: ${roomLabel}`;
+                chatWindow.classList.add("private-mode");
+                privateBtn.innerText = "🔓";
+                privateBtn.title = "公開チャットに戻る";
+            }
+
+            if (!currentUser) return;
+
+            // シンプルなコレクションパスに変更
+            const chatCol = collection(db, collectionName);
+
+            unsubscribeChat = onSnapshot(chatCol, (snapshot) => {
+                const messages = [];
+                snapshot.forEach(doc => {
+                    messages.push({ id: doc.id, ...doc.data() });
+                });
+
+                messages.sort((a, b) => a.timestamp - b.timestamp);
+                renderMessages(messages);
+            }, (error) => {
+                console.error("チャット読み込みエラー:", error);
+                if (error.code === 'permission-denied') {
+                     messagesDiv.innerHTML = `<div class="message" style="color: red;">エラー: 権限がありません。<br>Firebaseのルールを確認してください。</div>`;
+                } else {
+                     messagesDiv.innerHTML = `<div class="message" style="color: red;">エラー: ${error.message}</div>`;
+                }
+            });
+        }
+
+        // 送信処理
+        async function sendMessage() {
+            if (!currentUser) return;
+            const text = msgInput.value.trim();
+            const name = nameInput.value.trim() || "名無し";
+
+            if (!text) return;
+
+            const chatCol = collection(db, currentCollection);
+
+            try {
+                await addDoc(chatCol, {
+                    text: text,
+                    sender: name,
+                    userId: currentUser.uid,
+                    timestamp: Date.now()
+                });
+                msgInput.value = "";
+            } catch (e) {
+                console.error("送信エラー:", e);
+                showAlert("送信できませんでした: " + e.message);
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        msgInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function renderMessages(messages) {
+            messagesDiv.innerHTML = "";
+            
+            if (messages.length === 0) {
+                const emptyMsg = currentCollection === "public_chat" 
+                    ? "まだメッセージはありません" 
+                    : "ここは誰もいないようです...";
+                messagesDiv.innerHTML = `<div class="message" style="background: transparent; color: #888; text-align: center;">${emptyMsg}</div>`;
+                return;
+            }
+
+            messages.forEach(msg => {
+                const msgEl = document.createElement('div');
+                msgEl.className = 'message';
+                
+                const date = new Date(msg.timestamp);
+                const timeStr = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
+
+                const senderSafe = escapeHtml(msg.sender);
+                const textSafe = escapeHtml(msg.text);
+
+                msgEl.innerHTML = `
+                    <div class="meta">
+                        <span>${senderSafe}</span>
+                        <span>${timeStr}</span>
+                    </div>
+                    <div class="text">${textSafe}</div>
+                `;
+                messagesDiv.appendChild(msgEl);
+            });
+
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+
 </body>
-
 </html>
-
